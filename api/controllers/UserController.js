@@ -61,7 +61,7 @@ exports.delete = function(req,res) {
 }
 
 exports.addTransaction = function(req,res) {
-    var user = findOne({ email: req.params.email}, function (err, user) {
+    var data = user.findOne({ email: req.params.email}, function (err, user) {
             if (err) return null;
             return user;
         });
@@ -69,8 +69,8 @@ exports.addTransaction = function(req,res) {
         emailReceiver: req.body.emailReceiver,
         amountTransaction: req.body.amountTransaction
     };
-    user.transactions.push(transaction);
-    user.save(); 
+    data.transactions.push(transaction);
+    data.save(); 
 }
 
 exports.checkLogin = function(req,res) {
