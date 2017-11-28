@@ -61,8 +61,7 @@ exports.delete = function(req,res) {
 }
 
 exports.addTransaction = function(req,res) {
-    user.findOne({ email: req.params.email}, 
-        function (err, user) {
+    user.findOne({ email: req.params.email},function (err, user) {
             if (err) return res.status(500).send("There was a problem updating the user.");
             var transaction = {
                 emailReceiver: req.body.emailReceiver,
@@ -78,8 +77,8 @@ exports.addTransaction = function(req,res) {
 exports.checkLogin = function(req,res) {
     user.findOne({ email: req.params.email}, function (err, user) {
             if (err 
-                || user.email != email
-                || user.password != password) 
+                || user.email != req.body.email
+                || user.password != req.body.password) 
                 return res.status(500).send("failed login");
             res.status(200).send(user);
             return user;
