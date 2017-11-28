@@ -75,12 +75,17 @@ exports.addTransaction = function(req,res) {
 }
 
 exports.checkLogin = function(req,res) {
-    user.findOne({ email: req.params.email}, function (err, user) {
-            if (err 
-                || user.email != req.body.email
-                || user.password != req.body.password) 
-                return res.status(500).send("failed login");
-            res.status(200).send(user);
-            return user;
+    user.find({}, function (err, users) {
+            if (err) 
+                return res.status(500).send("There was a problem login");
+            for (var i = users.length - 1; i >= 0; i--) {
+                if(users[i].email == req.body.email
+                && users[i].password == req.body.password) {
+                    res.status(200).send(user);
+                    return user;
+                }
+            }
+            res.status(500).send("Login failed");
+            return null;
         });
 }
