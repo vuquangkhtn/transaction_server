@@ -8,10 +8,11 @@ module.exports = function(app) {
         .post(userController.create)
         .get(userController.loadAll);
 
+	app.route('/users/checklogin')
+        .post(userController.checkLogin)
 
     app.route('/users/:email')
-    	.post(userController.checkLogin)
+    	.post(userController.addTransaction)
         .get(userController.loadOne)
-        .put(userController.addTransaction)
         .delete(userController.delete);
 }
