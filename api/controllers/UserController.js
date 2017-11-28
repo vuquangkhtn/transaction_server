@@ -61,16 +61,18 @@ exports.delete = function(req,res) {
 }
 
 exports.addTransaction = function(req,res) {
-    var data = user.findOne({ email: req.params.email}, function (err, user) {
-            if (err) return null;
+    user.findOne({ email: req.params.email}, 
+        function (err, user) {
+            if (err) return res.status(500).send("There was a problem updating the user.");
+            var transaction = {
+                emailReceiver: req.body.emailReceiver,
+                amountTransaction: req.body.amountTransaction
+            };
+            user.transactions.push(transaction);
+            user.save(); 
             return user;
         });
-    var transaction = {
-        emailReceiver: req.body.emailReceiver,
-        amountTransaction: req.body.amountTransaction
-    };
-    data.transactions.push(transaction);
-    data.save(); 
+    
 }
 
 exports.checkLogin = function(req,res) {
