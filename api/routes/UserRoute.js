@@ -12,9 +12,6 @@ module.exports = function(app) {
     app.route('/users/:email')
     	.post(userController.checkLogin)
         .get(userController.loadOne)
-        .put(userController.update)
+        .put(userController.addTransaction)
         .delete(userController.delete);
-
-    app.route('/transactions')
-    	.post(userController.addTransaction)
 }
