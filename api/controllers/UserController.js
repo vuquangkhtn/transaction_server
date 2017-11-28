@@ -1,7 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var user = require('../models/User');
-var Transaction = require('../models/Transaction');
 
 // CREATES A NEW USER
 exports.create = function(req,res) {
