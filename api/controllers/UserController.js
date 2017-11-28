@@ -62,10 +62,10 @@ exports.delete = function(req,res) {
 
 exports.addTransaction = function(req,res) {
     var user = loadOne(req,res);
-    var transaction = new transaction({
+    var transaction = {
         emailReceiver: req.body.emailReceiver,
         amountTransaction: req.body.amountTransaction
-    });
+    };
     user.transactions.push(transaction);
     user.save(); 
 }
