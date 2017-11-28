@@ -69,3 +69,14 @@ exports.addTransaction = function(req,res) {
     user.transactions.push(transaction);
     user.save(); 
 }
+
+exports.checkLogin = function(req,res) {
+    user.findOne({ email: req.params.email}, function (err, user) {
+            if (err 
+                || user.email != email
+                || user.password != password) 
+                return res.status(500).send("failed login");
+            res.status(200).send(user);
+            return user;
+        });
+}
