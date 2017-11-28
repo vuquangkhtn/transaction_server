@@ -69,6 +69,7 @@ exports.addTransaction = function(req,res) {
             };
             user.transactions.push(transaction);
             user.save(); 
+            res.status(200).send(user);
             return user;
         });
     
