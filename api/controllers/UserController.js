@@ -70,11 +70,12 @@ exports.addTransaction = function(req,res) {
             if(transaction.amountTransaction <= user.amountWallet) {
                 User.findOne({ email: transaction.emailReceiver}, function (err, user){
                     if (err) return res.status(500).send("There was a problem updating the user.");
-                    if(user == null) {
+                    if(user.amountWallet == null) {
                         return res.status(305).send("Email receiver is not exist");
+                    } else {   
+                        user.amountWallet = parseInt(user.amountWallet) + parseInt(transaction.amountTransaction);
+                        user.save();
                     }
-                    user.amountWallet = parseInt(user.amountWallet) + parseInt(transaction.amountTransaction);
-                    user.save();
                 });
                 user.amountWallet -= transaction.amountTransaction;
                 user.transactions.push(transaction);
