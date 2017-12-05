@@ -68,13 +68,16 @@ exports.addTransaction = function(req,res) {
                 amountTransaction: req.body.amountTransaction
             };
             if(transaction.amountTransaction <= user.amountWallet) {
-                user.amountWallet -= transaction.amountTransaction;
-                user.transactions.push(transaction);
                 User.findOne({ email: transaction.emailReceiver}, function (err, user){
                     if (err) return res.status(500).send("There was a problem updating the user.");
+                    if(user == null) {
+                        return res.status(305).send("Email receiver is not exist");
+                    }
                     user.amountWallet = parseInt(user.amountWallet) + parseInt(transaction.amountTransaction);
                     user.save();
                 });
+                user.amountWallet -= transaction.amountTransaction;
+                user.transactions.push(transaction);
                 user.save(); 
                 res.status(200).send(user);
                 return user;
