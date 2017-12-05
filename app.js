@@ -3,7 +3,9 @@ var app = express();
 var bodyParser = require('body-parser');
 var  port = process.env.PORT || 3000;
 var db = require('./api/app-helpers/dbHelper');
+var cors = require('cors');
 
+app.use(cors({credentials: true}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
