@@ -96,8 +96,8 @@ exports.checkLogin = function(req,res) {
             for (var i = users.length - 1; i >= 0; i--) {
                 if(users[i].email == req.body.email
                 && users[i].password == req.body.password) {
-                    res.status(200).send(user);
-                    return user;
+                    res.status(200).send(user[i]);
+                    return user[i];
                 }
             }
             res.status(500).send("Login failed");
