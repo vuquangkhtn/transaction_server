@@ -72,7 +72,7 @@ exports.addTransaction = function(req,res) {
                 user.transactions.push(transaction);
                 User.findOne({ email: transaction.emailReceiver}, function (err, user){
                     if (err) return res.status(500).send("There was a problem updating the user.");
-                    user.amountWallet += transaction.amountTransaction;
+                    user.amountWallet = parseInt(user.amountWallet) + parseInt(transaction.amountTransaction);
                     user.save();
                 });
                 user.save(); 
