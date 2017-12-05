@@ -1,11 +1,11 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var user = require('../models/User');
+var User = require('../models/User');
 
 // CREATES A NEW USER
 exports.create = function(req,res) {
 
-    user.create({
+    User.create({
             name : req.body.name,
             email : req.body.email,
             password : req.body.password,
@@ -21,7 +21,7 @@ exports.create = function(req,res) {
 // RETURNS ONE THE USER IN THE DATABASE
 exports.loadOne = function(req,res) {
 
-    user.findOne({ email: req.params.email}, function (err, user) {
+    User.findOne({ email: req.params.email}, function (err, user) {
             if (err) return res.status(500).send(err);
             res.status(200).send(user);
             return user;
@@ -30,7 +30,7 @@ exports.loadOne = function(req,res) {
 
 // RETURNS ALL THE USERS IN THE DATABASE
 exports.loadAll = function(req,res) {
-	user.find({}, function (err, users) {
+	User.find({}, function (err, users) {
                 if (err) return res.status(500).send(err);
                 res.status(200).send(users);
                 return users;
@@ -40,7 +40,7 @@ exports.loadAll = function(req,res) {
 // UPDATE A EXIST USER
 exports.update = function(req,res) {
 
-    user.findOne({ email: req.params.email}, function (err, user){
+    User.findOne({ email: req.params.email}, function (err, user){
         		if (err) return res.status(500).send("There was a problem updating the user.");
     			user.name = req.body.name;
     			user.password = req.body.password;
@@ -51,7 +51,7 @@ exports.update = function(req,res) {
 
 // DELETE A EXIST USER
 exports.delete = function(req,res) {
-	user.remove({ 
+	User.remove({ 
 			email: req.params.email
 		}, 
 		function (err) {
@@ -61,22 +61,32 @@ exports.delete = function(req,res) {
 }
 
 exports.addTransaction = function(req,res) {
-    user.findOne({ email: req.params.email},function (err, user) {
+    User.findOne({ email: req.params.email},function (err, user) {
             if (err) return res.status(500).send("There was a problem updating the user.");
             var transaction = {
                 emailReceiver: req.body.emailReceiver,
                 amountTransaction: req.body.amountTransaction
             };
-            user.transactions.push(transaction);
-            user.save(); 
-            res.status(200).send(user);
-            return user;
+            if(transaction.amountTransaction <= user.amountWallet) {
+                user.amountWallet -= transaction.amountTransaction;
+                user.transactions.push(transaction);
+                User.findOne({ email: transaction.emailReceiver}, function (err, user){
+                    if (err) return res.status(500).send("There was a problem updating the user.");
+                    user.amountWallet += transaction.amountTransaction;
+                    user.save();
+                });
+                user.save(); 
+                res.status(200).send(user);
+                return user;
+            } else {
+                res.status(304).send("Money is not enough");
+            }
         });
     
 }
 
 exports.checkLogin = function(req,res) {
-    user.find({}, function (err, users) {
+    User.find({}, function (err, users) {
             if (err) 
                 return res.status(500).send("There was a problem login");
             for (var i = users.length - 1; i >= 0; i--) {
